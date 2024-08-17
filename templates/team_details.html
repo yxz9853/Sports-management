@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Management System - Team Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main container styles */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #333; /* Header color */
+            color: #fff;
+            border-radius: 8px 8px 0 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Card styles */
+        .card {
+            background-color: #fff;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Team details styles */
+        .team-details h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 10px;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .details-grid:last-child {
+            border-bottom: none;
+        }
+
+        .details-label {
+            font-weight: bold;
+        }
+
+        .team-actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .team-actions a {
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .team-actions button {
+            font-family: 'Helvetica', sans-serif;
+            width: 120px;
+            height: 40px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .team-actions .edit-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .team-actions .edit-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Team players table styles */
+        .team-players h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .team-players table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .team-players table th, .team-players table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .team-players table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .team-players table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .team-players button {
+            font-family: 'Helvetica', sans-serif;
+            width: 100px;
+            height: 35px;
+            padding: 5px 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            margin-right: 5px;
+        }
+
+        .team-players .delete-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .team-players .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .team-players .add-button {
+            background-color: #007bff;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .team-players .add-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sports Management System - Team Details</h1>
+            <div class="back-button">
+                <a href="{{ url_for('teams', club_id=club_id) }}">
+                    <button>Back</button>
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="card team-details">
+            <h2>Team Details</h2>
+            <div class="details-grid">
+                <div class="details-label">Team Name:</div>
+                <div class="details-value">{{ team_name }}</div>
+            </div>
+            <div class="details-grid">
+                <div class="details-label">Team ID:</div>
+                <div class="details-value">{{ team_id }}</div>
+            </div>
+            <div class="details-grid">
+                <div class="details-label">Club ID:</div>
+                <div class="details-value">{{ club_id }}</div>
+            </div>
+            <div class="details-grid">
+                <div class="details-label">Coach Name:</div>
+                <div class="details-value">{{ coach_name }}</div>
+            </div>
+            <div class="details-grid">
+                <div class="details-label">Coach Contact:</div>
+                <div class="details-value">{{ coach_contact }}</div>
+            </div>
+            <div class="details-grid">
+                <div class="details-label">Division:</div>
+                <div class="details-value">{{ division_name }}</div>
+            </div>
+            <div class="team-actions">
+                <a href="{{ url_for('edit_team', team_id=team_id, club_id=club_id) }}">
+                    <button class="edit-button">Edit</button>
+                </a>
+            </div>
+        </div>
+        <div class="card team-players">
+            <h3>Players</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Player Name</th>
+                        <th>Player ID</th>
+                        <th>Date of Birth</th>
+                        <th>Street Address</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Zip Code</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in players %}
+                    <tr>
+                        <td>{{ player[1] }}</td>
+                        <td>{{ player[0] }}</td>
+                        <td>{{ player[2] }}</td>
+                        <td>{{ player[3] }}</td>
+                        <td>{{ player[4] }}</td>
+                        <td>{{ player[5] }}</td>
+                        <td>{{ player[6] }}</td>
+                        <td>
+                            <button class="delete-button" onclick="confirmDelete('{{ url_for('team_remove_player', player_id=player[0], team_id=team_id, club_id=club_id) }}')">Remove</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if players|length < 10 %}
+                <a href="{{ url_for('team_add_player', team_id=team_id, club_id=club_id) }}">
+                    <button class="add-button">Add Player</button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        function confirmDelete(deleteUrl) {
+            if (confirm("Are you sure you want to remove this player?")) {
+                window.location.href = deleteUrl;
+            }
+        }
+    </script>
+</body>
+</html>

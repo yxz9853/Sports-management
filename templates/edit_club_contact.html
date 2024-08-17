@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Club Contact Phone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Container styles */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            width: 100%;
+            max-width: 800px; /* Same as container max-width */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #333; /* Header color */
+            color: #fff; /* Text color for contrast */
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center; /* Center text and button */
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Form group styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* Button group styles */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center; /* Center the buttons */
+        }
+
+        .save-button, .cancel-button {
+            font-size: 16px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .save-button {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .save-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .cancel-button {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .cancel-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Edit Club Contact Phone</h1>
+            <div class="back-button">
+                <button onclick="window.location.href='{{ url_for('club', club_id=club_data.club_id) }}'">Back</button>
+            </div>
+        </div>
+        <form method="POST" action="{{ url_for('edit_club_contact', club_id=club_data.club_id) }}">
+            <div class="form-group">
+                <label for="club_contact">Contact Phone</label>
+                <input type="tel" class="form-control" id="club_contact" name="club_contact" value="{{ club_data.club_contact }}" pattern="[0-9]{10}" title="Please enter a 10-digit phone number" required>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="save-button">Save</button>
+                <button type="button" class="cancel-button" onclick="window.location.href='{{ url_for('club', club_id=club_data.club_id) }}'">Cancel</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

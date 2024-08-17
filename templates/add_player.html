@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sports Management System - Add Player</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function validateForm() {
+            var nameInput = document.getElementById("name");
+            var dobInput = document.getElementById("dob");
+            var streetAddressInput = document.getElementById("street_address");
+            var cityInput = document.getElementById("city");
+            var stateInput = document.getElementById("state");
+            var zipInput = document.getElementById("zip");
+
+            if (nameInput.value.trim() === "") {
+                alert("Please enter a name.");
+                return false;
+            }
+
+            if (dobInput.value.trim() === "") {
+                alert("Please enter a date of birth.");
+                return false;
+            }
+
+            if (streetAddressInput.value.trim() === "") {
+                alert("Please enter a street address.");
+                return false;
+            }
+
+            if (cityInput.value.trim() === "") {
+                alert("Please enter a city.");
+                return false;
+            }
+
+            if (stateInput.value.trim() === "") {
+                alert("Please enter a state.");
+                return false;
+            }
+
+            if (zipInput.value.trim() === "") {
+                alert("Please enter a zip code.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sports Management System - Add Player</h1>
+            <div class="header-buttons">
+                <a href="{{ url_for('players') }}">
+                    <button>Back to Players</button>
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="form-container">
+            <form method="post" action="{{ url_for('add_player') }}" onsubmit="return validateForm()">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label for="street_address">Street Address:</label>
+                    <input type="text" id="street_address" name="street_address" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" id="state" name="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="zip">Zip Code:</label>
+                    <input type="text" id="zip" name="zip" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit">Save</button>
+                    <a href="{{ url_for('players') }}">
+                        <button type="button">Cancel</button>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

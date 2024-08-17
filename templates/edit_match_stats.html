@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Player Statistics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Additional styles specific to this form */
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .total-score {
+            margin-bottom: 20px;
+        }
+
+        .total-score label {
+            font-weight: bold;
+        }
+
+        input[readonly] {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .player-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .button-group a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-group button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .button-group a:hover {
+            background-color: #5a6268;
+        }
+
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        // JavaScript function to validate the sum of player scores
+        function validateForm() {
+            const totalScore = parseInt(document.getElementById('totalScore').value);
+            const playerScores = document.querySelectorAll('input[name="player_scores[]"]');
+            let sum = 0;
+
+            playerScores.forEach(input => {
+                sum += parseInt(input.value) || 0; // Add score or 0 if empty
+            });
+
+            if (sum !== totalScore) {
+                alert(`The sum of player scores (${sum}) does not equal the total score (${totalScore}).`);
+                return false; // Prevent form submission
+            }
+
+            return true; // Allow form submission
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Enter Player Statistics</h1>
+        </div>
+        <form method="POST" action="{{ url_for('edit_match_stats', tournament_id=tournament_id, match_id=match_id, team=team) }}" onsubmit="return validateForm();">
+            <!-- Display the total score -->
+            <div class="total-score">
+                <label for="totalScore">Total Score: </label>
+                <input type="text" id="totalScore" value="{{ total_score }}" readonly>
+            </div>
+            <!-- Player scores input -->
+            {% for player_id, player_name, position_1_id, position_2_id, points_scored in players %}
+            <div class="player-row">
+                <label>{{ player_name }}</label>
+                <input type="hidden" name="player_ids[]" value="{{ player_id }}">
+                <!-- Dropdown for positions -->
+                <select name="player_positions1[]" required>
+                    <option value="">Select Position 1</option>
+                    {% for position_id, position_name in positions %}
+                        <option value="{{ position_id }}" {% if position_1_id == position_id %}selected{% endif %}>{{ position_name }}</option>
+                    {% endfor %}
+                </select>
+                <select name="player_positions2[]" required>
+                    <option value="">Select Position 2</option>
+                    {% for position_id, position_name in positions %}
+                        <option value="{{ position_id }}" {% if position_2_id == position_id %}selected{% endif %}>{{ position_name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="player_scores[]" placeholder="Score" min="0" value="{{ points_scored }}" required>
+            </div>
+            {% endfor %}
+            <div class="button-group">
+                <button type="submit">Save</button>
+                <a href="{{ url_for('match_stats', tournament_id=tournament_id, match_id=match_id) }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

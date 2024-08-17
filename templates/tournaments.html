@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tournament Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #333; /* Header color */
+            color: #fff; /* Text color for contrast */
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .back-button a button {
+            font-size: 16px;
+            padding: 10px 20px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            background-color: #007bff; /* Back button color */
+        }
+
+        .back-button a button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+        /* Form styles */
+        form {
+            margin-top: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        form button {
+            font-size: 16px;
+            padding: 10px 20px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            background-color: #28a745; /* Add Tournament button color */
+        }
+
+        form button:hover {
+            background-color: #218838; /* Darker shade on hover */
+        }
+
+        /* List styles */
+        ul {
+            margin-top: 20px;
+            padding-left: 0;
+        }
+
+        ul li {
+            list-style-type: none;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        ul li a {
+            color: #dc3545; /* Remove link color */
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert styles */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tournament Management</h1>
+            <div class="back-button">
+                <a href="{{ url_for('admin') }}">
+                    <button>Back</button>
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h2>Add Tournament</h2>
+        <form method="post" action="{{ url_for('add_tournament') }}">
+            <label for="tournament_name">Tournament Name:</label>
+            <input type="text" id="tournament_name" name="tournament_name" required>
+            <button type="submit">Add Tournament</button>
+        </form>
+
+        <h2>Tournaments</h2>
+        <ul>
+            {% for tournament_id, tournament_name in tournaments %}
+            <li>
+                {{ tournament_name }}
+                <a href="{{ url_for('remove_tournament', tournament_id=tournament_id) }}" onclick="return confirmRemove('{{ tournament_name }}')">Remove</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        function confirmRemove(tournamentName) {
+            return confirm(`Are you sure you want to remove tournament: ${tournamentName}?`);
+        }
+    </script>
+</body>
+</html>

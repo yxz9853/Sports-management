@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Match</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #333; /* Header color */
+            color: #fff; /* Text color for contrast */
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Form styles */
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            background-color: #28a745; /* Add Match button color */
+        }
+
+        button[type="button"] {
+            background-color: #6c757d; /* Cancel button color */
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-buttons a button:hover {
+            background-color: #5a6268;
+        }
+
+        .form-buttons button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            var homeTeamSelect = document.getElementById('home_team');
+            var awayTeamSelect = document.getElementById('away_team');
+
+            homeTeamSelect.addEventListener('change', function() {
+                var selectedHomeTeam = this.value;
+                var options = awayTeamSelect.options;
+
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].value === selectedHomeTeam) {
+                        options[i].disabled = true;
+                    } else {
+                        options[i].disabled = false;
+                    }
+                }
+            });
+
+            awayTeamSelect.addEventListener('change', function() {
+                var selectedAwayTeam = this.value;
+                var options = homeTeamSelect.options;
+
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].value === selectedAwayTeam) {
+                        options[i].disabled = true;
+                    } else {
+                        options[i].disabled = false;
+                    }
+                }
+            });
+        });
+
+        function validateForm() {
+            var homeScore = document.getElementById("home_team_score").value;
+            var awayScore = document.getElementById("away_team_score").value;
+
+            if (homeScore < 0) {
+                alert("Home team score must not be less than 0.");
+                return false;
+            }
+
+            if (awayScore < 0) {
+                alert("Away team score must not be less than 0.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Add Match</h1>
+        </div>
+        <form action="{{ url_for('add_match', tournament_id=tournament_id) }}" method="post" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="venue">Venue</label>
+                <select class="form-control" id="venue" name="venue" required>
+                    <option value="">Select Venue</option>
+                    {% for venue in venues %}
+                    <option value="{{ venue[0] }}">{{ venue[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Time</label>
+                <input type="time" class="form-control" id="time" name="time" required>
+            </div>
+            <div class="form-group">
+                <label for="home_team">Home Team</label>
+                <select class="form-control" id="home_team" name="home_team" required>
+                    <option value="">Select Home Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team[0] }}">{{ team[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="home_team_score">Home Team Score</label>
+                <input type="number" class="form-control" id="home_team_score" name="home_team_score" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="away_team_score">Away Team Score</label>
+                <input type="number" class="form-control" id="away_team_score" name="away_team_score" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="away_team">Away Team</label>
+                <select class="form-control" id="away_team" name="away_team" required>
+                    <option value="">Select Away Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team[0] }}">{{ team[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-buttons">
+                <button type="submit">Add Match</button>
+                <a href="{{ url_for('view_matches', tournament_id=tournament_id) }}">
+                    <button type="button">Cancel</button>
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

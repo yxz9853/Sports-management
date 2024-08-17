@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sports Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #333; /* Match header color with button */
+            color: #fff; /* Text color for contrast */
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #e0e0e0; /* Slightly lighter text color for contrast */
+        }
+
+        .header a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            padding: 10px;
+            background-color: #45a049; /* Slightly darker shade of the header color */
+            border-radius: 4px;
+        }
+
+        .header a:hover {
+            background-color: #388e3c; /* Darker shade on hover */
+        }
+
+        /* Button container styles */
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .button-container button {
+            font-family: 'Helvetica', sans-serif;
+            padding: 15px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-container button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Alert styles */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Media query for small screens */
+        @media (max-width: 767px) {
+            .button-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sports Management System</h1>
+            <p>Logged in as: {{ current_user.username }}</p>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="button-container">
+            <button data-url="{{ url_for('club', club_id=club_id) }}">Club</button>
+            <button data-url="{{ url_for('teams', club_id=club_id) }}">Teams</button>
+            <button data-url="{{ url_for('view_tournaments') }}">Tournaments</button>
+            <button data-url="{{ url_for('player_stats') }}">Player Statistics</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.button-container button[data-url]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                window.location.href = this.getAttribute('data-url');
+            });
+        });
+    </script>
+</body>
+</html>

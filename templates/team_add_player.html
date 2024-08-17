@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Management System - Add Player</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main container styles */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Form container styles */
+        .form-container {
+            background-color: #fff;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .form-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-buttons button {
+            font-family: 'Helvetica', sans-serif;
+            width: 120px;
+            height: 40px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .form-buttons button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .form-buttons button[type="submit"]:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .form-buttons button[type="button"] {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .form-buttons button[type="button"]:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Alert message styles */
+        .alert {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .alert.alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert.alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            var nameInput = document.getElementById("player");
+
+            if (nameInput.value.trim() === "") {
+                alert("Please select a player.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sports Management System - Add Player</h1>
+            <div class="back-button">
+                <a href="{{ url_for('team_details', team_id=team_id, club_id=club_id ) }}">
+                    <button>Back to Players</button>
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="form-container">
+            <form method="post" action="{{ url_for('team_add_player', team_id=team_id, club_id=club_id) }}" onsubmit="return validateForm()">
+                <div class="form-group">
+                    <label for="player">Player:</label>
+                    <select id="player" name="player" required>
+                        <option value="">Select a player</option>
+                        {% for player_id, player_name in players %}
+                            <option value="{{ player_id }}">{{ player_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit">Save</button>
+                    <a href="{{ url_for('team_details', team_id=team_id, club_id=club_id) }}">
+                        <button type="button">Cancel</button>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

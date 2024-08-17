@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Management System - Edit Player</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #333; /* Header color */
+            color: #fff; /* Text color for contrast */
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Form styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .form-group input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-buttons button {
+            font-size: 16px;
+            padding: 10px 20px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .form-buttons button[type="submit"] {
+            background-color: #28a745; /* Save button color */
+        }
+
+        .form-buttons button[type="submit"]:hover {
+            background-color: #218838; /* Darker shade on hover */
+        }
+
+        .form-buttons button[type="button"] {
+            background-color: #007bff; /* Cancel button color */
+        }
+
+        .form-buttons button[type="button"]:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sports Management System - Edit Player</h1>
+        </div>
+        <form method="POST" action="{{ url_for('edit_player', player_id=player_id) }}">
+            <div class="form-group">
+                <label for="player_name">Player Name:</label>
+                <input type="text" id="player_name" name="player_name" value="{{ player_name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="player_dob">Date of Birth:</label>
+                <input type="date" id="player_dob" name="player_dob" value="{{ player_dob }}" required>
+            </div>
+            <div class="form-group">
+                <label for="street_address">Street Address:</label>
+                <input type="text" id="street_address" name="street_address" value="{{ street_address }}" required>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" value="{{ city }}" required>
+            </div>
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" value="{{ state }}" required>
+            </div>
+            <div class="form-group">
+                <label for="zip_code">Zip Code:</label>
+                <input type="text" id="zip_code" name="zip_code" value="{{ zip_code }}" required>
+            </div>
+            <div class="form-buttons">
+                <button type="submit">Save</button>
+                <a href="{{ url_for('players') }}">
+                    <button type="button">Cancel</button>
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

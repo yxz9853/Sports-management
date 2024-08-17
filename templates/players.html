@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Management System - Players</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #333; /* Header color */
+            color: #fff; /* Text color for contrast */
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-buttons a button {
+            font-size: 16px;
+            padding: 10px 20px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .header-buttons a button:first-child {
+            background-color: #007bff; /* Back button color */
+        }
+
+        .header-buttons a button:first-child:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+        .header-buttons a button:last-child {
+            background-color: #28a745; /* Add Player button color */
+        }
+
+        .header-buttons a button:last-child:hover {
+            background-color: #218838; /* Darker shade on hover */
+        }
+
+        /* Table styles */
+        .players-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .players-table th, .players-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .players-table th {
+            background-color: #007bff; /* Header color for table */
+            color: #fff;
+        }
+
+        .players-table td button {
+            font-size: 16px;
+            padding: 8px 12px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .players-table td a:first-child button {
+            background-color: #ffc107; /* Edit button color */
+        }
+
+        .players-table td a:first-child button:hover {
+            background-color: #e0a800; /* Darker shade on hover */
+        }
+
+        .players-table td a:last-child button {
+            background-color: #dc3545; /* Remove button color */
+        }
+
+        .players-table td a:last-child button:hover {
+            background-color: #c82333; /* Darker shade on hover */
+        }
+
+        /* Alert styles */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sports Management System - Players</h1>
+            <div class="header-buttons">
+                <a href="{{ url_for('admin') }}">
+                    <button>Back</button>
+                </a>
+                <a href="{{ url_for('add_player') }}">
+                    <button>Add Player</button>
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <table class="players-table">
+            <thead>
+                <tr>
+                    <th>Player Name</th>
+                    <th>Date of Birth</th>
+                    <th>Street Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                <tr>
+                    <td>{{ player.player_name }}</td>
+                    <td>{{ player.player_dob }}</td>
+                    <td>{{ addresses[loop.index0].street_address }}</td>
+                    <td>{{ addresses[loop.index0].city }}</td>
+                    <td>{{ addresses[loop.index0].state }}</td>
+                    <td>{{ addresses[loop.index0].zip }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_player', player_id=player.player_id) }}">
+                            <button>Edit</button>
+                        </a>
+                        <a href="{{ url_for('remove_player', player_id=player.player_id) }}" onclick="return confirmRemove('{{ player.player_name }}')">
+                            <button>Remove</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function confirmRemove(playerName) {
+            return confirm(`Are you sure you want to remove player: ${playerName}?`);
+        }
+    </script>
+</body>
+</html>
