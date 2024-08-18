@@ -782,7 +782,7 @@ def team_remove_player(club_id, team_id, player_id):
         return redirect(url_for('dashboard'))
     conn = sqlite3.Connection(database)
     cur = conn.cursor()
-    cur.execute("UPDATE players SET team_id = NULL, position_id = NULL WHERE player_id = ?", (player_id,))
+    cur.execute("UPDATE players SET team_id = NULL WHERE player_id = ?", (player_id,))
     conn.commit()
     conn.close()
     return redirect(url_for('team_details', club_id=club_id, team_id=team_id))
