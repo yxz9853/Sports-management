@@ -1030,7 +1030,8 @@ def player_stats():
                 FROM players p 
                     JOIN teams t ON p.team_id = t.team_id
                     JOIN clubs c ON t.club_id = c.club_id
-                    JOIN divisions d ON t.division_id = d.division_id""")
+                    JOIN divisions d ON t.division_id = d.division_id
+                    ORDER BY p.player_name""")
     players = cur.fetchall()
 
     return render_template('view_players.html', players=players)
